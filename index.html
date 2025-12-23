@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charlie Pool | Project Finance & AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1A1C1E;
+            --card-bg: #242729;
+            --accent: #40FB72;
+            --text: #E2E2E2;
+            --text-dim: #A0A0A0;
+            --pulse-glow: rgba(64, 251, 114, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        code, .mono {
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+        }
+
+        /* The Pulse Line */
+        #pulse-container {
+            position: fixed;
+            left: 50px;
+            top: 0;
+            width: 2px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 10;
+        }
+
+        #pulse-line {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 0%;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+            transition: height 0.1s ease-out;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        section {
+            padding: 120px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section I: Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 600px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .quote-box {
+            border-left: 2px solid var(--accent);
+            padding-left: 1.5rem;
+            margin-top: 3rem;
+            font-style: italic;
+            max-width: 500px;
+        }
+
+        /* Section II: Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-auto-rows: minmax(180px, auto);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .card.large { grid-column: span 4; grid-row: span 2; }
+        .card.medium { grid-column: span 2; grid-row: span 2; }
+        .card.wide { grid-column: span 3; grid-row: span 1; }
+        .card.full { grid-column: span 6; }
+
+        .card h3 { margin-bottom: 1rem; color: var(--accent); }
+        .card p { font-size: 0.95rem; color: var(--text-dim); }
+
+        /* SVG Visualization */
+        .viz {
+            margin-top: 1rem;
+            width: 100%;
+            height: 60px;
+        }
+
+        /* Section III: Philosophy */
+        .philosophy-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .personality-quote {
+            font-family: 'Roboto Mono', monospace;
+            background: rgba(64, 251, 114, 0.05);
+            padding: 2rem;
+            border-radius: 0 20px 20px 20px;
+            border-right: 1px solid var(--accent);
+        }
+
+        /* Section IV: Green Lab */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lab-post {
+            padding: 2rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        .lab-post:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover { color: var(--accent); }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            #pulse-container { left: 10px; }
+            .container { padding: 0 1.5rem 0 3.5rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .card.large, .card.medium, .card.wide, .card.full { grid-column: span 1; grid-row: auto; }
+            .philosophy-content { grid-template-columns: 1fr; gap: 2rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pulse-container">
+        <div id="pulse-line"></div>
+    </div>
+
+    <main class="container">
+        <!-- HERO SECTION -->
+        <section class="hero visible">
+            <code class="mono">Charlie Pool // Project Finance Specialist</code>
+            <h1>Financing the Energy Transition at Scale.</h1>
+            <p>Project finance is the bottleneck of the green revolution. I build AI-driven frameworks to break that bottleneck and accelerate capital flow into sustainable infrastructure.</p>
+            <div class="quote-box">
+                <p>"Capital is just another form of energy. To save the planet, we don't just need more of it—we need it to move faster and smarter."</p>
+            </div>
+        </section>
+
+        <!-- SPOTLIGHT SECTION -->
+        <section id="aipff">
+            <code class="mono">The Methodology</code>
+            <h2 style="font-size: 2.5rem; margin: 1rem 0 2rem;">AIPFF: AI Project Finance Framework</h2>
+            
+            <div class="bento-grid">
+                <!-- Problem -->
+                <div class="card wide">
+                    <div>
+                        <h3>The Problem</h3>
+                        <p>Traditional finance is bogged down by manual due diligence and rigid, fragmented data silos.</p>
+                    </div>
+                </div>
+
+                <!-- Document Synthesis -->
+                <div class="card medium">
+                    <div>
+                        <h3>Document Synthesis</h3>
+                        <p>LLMs extracting key risk factors from PPA and EPC contracts in seconds, not weeks.</p>
+                    </div>
+                    <svg class="viz" viewBox="0 0 200 60">
+                        <path d="M0 40 Q 40 10 80 40 T 160 40 T 200 20" stroke="#40FB72" fill="transparent" stroke-width="2" />
+                        <rect x="20" y="10" width="10" height="40" fill="#40FB72" opacity="0.3" />
+                        <rect x="140" y="20" width="10" height="30" fill="#40FB72" opacity="0.3" />
+                    </svg>
+                </div>
+
+                <!-- Risk Modeling -->
+                <div class="card large">
+                    <div>
+                        <h3>Dynamic Risk Modeling</h3>
+                        <p>Beyond spreadsheets: AI-driven simulations of "black swan" climate and market scenarios to ensure long-term resilience.</p>
+                    </div>
+                    <!-- Minimalist SVG Chart -->
+                    <svg class="viz" viewBox="0 0 400 100">
+                        <polyline points="0,80 50,70 100,85 150,40 200,60 250,20 300,45 400,10" fill="none" stroke="#40FB72" stroke-width="2" />
+                        <circle cx="250" cy="20" r="4" fill="#40FB72" />
+                        <text x="260" y="20" fill="#40FB72" font-size="10" font-family="Roboto Mono">RISK PEAK</text>
+                    </svg>
+                </div>
+
+                <!-- Optimization -->
+                <div class="card medium">
+                    <div>
+                        <h3>Strategic Optimization</h3>
+                        <p>Aligning project IRR with real-world sustainability impact through multi-variable optimization.</p>
+                    </div>
+                </div>
+
+                <div class="card full">
+                    <p style="text-align: center;">AIPFF turns due diligence from a defensive hurdle into a competitive accelerator.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHILOSOPHY SECTION -->
+        <section id="philosophy">
+            <div class="philosophy-content">
+                <div>
+                    <code class="mono">The Human-in-the-Loop</code>
+                    <h2 style="font-size: 2rem; margin: 1rem 0;">A Transparency Engine</h2>
+                    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">
+                        AIPFF isn't a "black box." By automating the mechanical parts of finance, we allow the specialists—the engineers, the lawyers, and the bankers—to focus on the creative problem-solving required to get complex energy projects off the ground.
+                    </p>
+                </div>
+                <div class="personality-quote">
+                    <p style="color: var(--accent);">"I don't trust code that hasn't been stress-tested by a human, and I don't trust a human who refuses to use better tools."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GREEN LAB SECTION -->
+        <section id="lab">
+            <code class="mono">Insights & Research</code>
+            <h2 style="font-size: 2.5rem; margin: 1rem 0 3rem;">Signals from the Intersection</h2>
+            
+            <div class="lab-grid">
+                <a href="#" class="lab-post">
+                    <code class="mono">01</code>
+                    <h3>How LLMs are rewriting the rules of Project Due Diligence.</h3>
+                </a>
+                <a href="#" class="lab-post">
+                    <code class="mono">02</code>
+                    <h3>The Carbon-Adjusted IRR: A new North Star for Energy Finance.</h3>
+                </a>
+                <a href="#" class="lab-post">
+                    <code class="mono">03</code>
+                    <h3>Why "Better" beats "Faster" every time in Infrastructure.</h3>
+                </a>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div>
+                <p class="mono">© 2024 Charlie Pool</p>
+                <p style="font-size: 0.8rem; color: var(--text-dim);">Designing a better planet through finance.</p>
+            </div>
+            <div class="social-links">
+                <a href="mailto:charlie.pool@gmail.com">Email</a>
+                <a href="https://www.linkedin.com/in/charliepool/" target="_blank">LinkedIn</a>
+                <a href="https://github.com/ChazzaPMainlines" target="_blank">GitHub</a>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Scroll Pulse Logic
+        const pulseLine = document.getElementById('pulse-line');
+        
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (scrollPos / totalHeight) * 100;
+            pulseLine.style.height = progress + '%';
+        });
+
+        // Intersection Observer for Section Animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
